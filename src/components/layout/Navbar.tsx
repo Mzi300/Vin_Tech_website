@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,50 +69,75 @@ export const Navbar = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <div key={link.name} className="relative group">
-              <Link
-                href={link.href}
-                className="text-sm font-medium text-slate-300 hover:text-accent transition-colors relative flex items-center gap-1.5 py-2"
-              >
-                {link.name}
-                {link.subItems && (
+            <div 
+              key={link.name} 
+              className="relative"
+              onMouseEnter={() => link.subItems && setIsProductsOpen(true)}
+              onMouseLeave={() => link.subItems && setIsProductsOpen(false)}
+            >
+              {link.subItems ? (
+                <button
+                  onClick={() => setIsProductsOpen(!isProductsOpen)}
+                  className="text-sm font-medium text-slate-300 hover:text-accent transition-colors relative flex items-center gap-1.5 py-2"
+                >
+                  {link.name}
                   <motion.span 
-                    animate={{ rotate: 0 }}
-                    whileHover={{ rotate: 180 }}
+                    animate={{ rotate: isProductsOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
                     className="text-[10px] opacity-50"
                   >
                     ▼
                   </motion.span>
-                )}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all group-hover:w-full" />
-              </Link>
+                  <span className={cn(
+                    "absolute -bottom-1 left-0 h-0.5 bg-accent transition-all duration-300",
+                    isProductsOpen ? "w-full" : "w-0"
+                  )} />
+                </button>
+              ) : (
+                <Link
+                  href={link.href}
+                  className="text-sm font-medium text-slate-300 hover:text-accent transition-colors relative flex items-center gap-1.5 py-2"
+                >
+                  {link.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 hover:w-full" />
+                </Link>
+              )}
 
               {/* Dropdown Menu */}
-              {link.subItems && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform scale-95 group-hover:scale-100 origin-top z-50">
-                  <div className="w-72 glass p-5 border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl bg-slate-900/95">
-                    <div className="flex flex-col gap-3">
-                       <span className="text-[11px] font-black text-accent uppercase tracking-[0.2em] px-2 mb-1">
-                         Our Innovations
-                       </span>
-                       {link.subItems.map((sub) => (
-                         <Link
-                           key={sub.name}
-                           href={sub.href}
-                           className="flex flex-col p-4 rounded-xl hover:bg-white/10 transition-colors group/sub border border-transparent hover:border-white/10 shadow-sm"
-                         >
-                           <span className="text-base font-black text-white group-hover/sub:text-accent transition-colors">
-                             {sub.name}
-                           </span>
-                           <span className="text-xs text-slate-300 leading-relaxed mt-1.5 font-medium">
-                             {sub.description}
-                           </span>
-                         </Link>
-                       ))}
+              <AnimatePresence>
+                {link.subItems && isProductsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50"
+                  >
+                    <div className="w-72 glass p-5 border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl bg-slate-900/95">
+                      <div className="flex flex-col gap-3">
+                        <span className="text-[11px] font-black text-accent uppercase tracking-[0.2em] px-2 mb-1">
+                          Our Innovations
+                        </span>
+                        {link.subItems.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            href={sub.href}
+                            onClick={() => setIsProductsOpen(false)}
+                            className="flex flex-col p-4 rounded-xl hover:bg-white/10 transition-colors group/sub border border-transparent hover:border-white/10 shadow-sm"
+                          >
+                            <span className="text-base font-black text-white group-hover/sub:text-accent transition-colors">
+                              {sub.name}
+                            </span>
+                            <span className="text-xs text-slate-300 leading-relaxed mt-1.5 font-medium">
+                              {sub.description}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
           <Link href="#contact" className="btn-primary py-2 px-4 text-xs">
