@@ -1,0 +1,10 @@
+---
+deployment:
+  tasks:
+    # 1. Define the absolute path where your Setup Node.js App runs on the server.
+    # IMPORTANT: Replace "selta" with your actual cPanel username if it differs,
+    # and "vintech-presence" with the folder name you configured.
+    - export DEPLOYPATH=/home/selta/vintech-presence/
+
+    # 2. Sync all repository files to the deployment directory, excluding Git metadata
+    - /bin/rsync -aP --exclude='.git' --exclude='node_modules' ./ $DEPLOYPATH --delete-after

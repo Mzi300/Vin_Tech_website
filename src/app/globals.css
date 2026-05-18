@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0B1120;
+  --foreground: #F8FAFC;
+  --primary: #22D3EE;
+  --secondary: #334155;
+  --accent: #F59E0B;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-[#22D3EE]/30;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4 {
+    @apply tracking-tight font-semibold text-slate-100;
+  }
+}
+
+@layer components {
+  .glass {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-emerald {
+    background: rgba(16, 185, 129, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(16, 185, 129, 0.1);
+  }
+
+  .text-glow-emerald {
+    text-shadow: 0 0 15px var(--vintech-emerald-glow);
+  }
+  
+  .bg-gradient-vintech {
+    background: linear-gradient(135deg, var(--vintech-navy) 0%, #000 100%);
+  }
+}
